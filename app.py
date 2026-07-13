@@ -17,9 +17,18 @@ def cargar_recursos():
 
 
 def preparar_registro(registro, columnas_modelo):
-    registro_encoded = pd.get_dummies(registro, drop_first=True)
-    registro_encoded = registro_encoded.reindex(columns=columnas_modelo, fill_value=0)
-    return registro_encoded
+    registro_modelo = pd.DataFrame(0, index=[0], columns=columnas_modelo)
+
+    for columna, valor in registro.iloc[0].items():
+        if columna in registro_modelo.columns:
+            registro_modelo.loc[0, columna] = valor
+            continue
+
+        columna_dummy = f"{columna}_{valor}"
+        if columna_dummy in registro_modelo.columns:
+            registro_modelo.loc[0, columna_dummy] = 1
+
+    return registro_modelo
 
 
 st.set_page_config(
