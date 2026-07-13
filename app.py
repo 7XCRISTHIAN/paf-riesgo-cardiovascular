@@ -18,10 +18,57 @@ def cargar_recursos():
 
 
 def preparar_registro(registro, columnas_modelo):
-    registro_modelo = pd.DataFrame(0, index=[0], columns=columnas_modelo)
+    registro_modelo = pd.DataFrame(0.0, index=[0], columns=columnas_modelo)
+
+    mapas = {
+        "General_Health": {
+            "Poor": 0,
+            "Fair": 1,
+            "Good": 2,
+            "Very Good": 3,
+            "Excellent": 4,
+        },
+        "Checkup": {
+            "Never": 0,
+            "5 or more years ago": 1,
+            "Within the past 5 years": 2,
+            "Within the past 2 years": 3,
+            "Within the past year": 4,
+        },
+        "Age_Category": {
+            "18-24": 0,
+            "25-29": 1,
+            "30-34": 2,
+            "35-39": 3,
+            "40-44": 4,
+            "45-49": 5,
+            "50-54": 6,
+            "55-59": 7,
+            "60-64": 8,
+            "65-69": 9,
+            "70-74": 10,
+            "75-79": 11,
+            "80+": 12,
+        },
+        "Exercise": {"No": 0, "Yes": 1},
+        "Skin_Cancer": {"No": 0, "Yes": 1},
+        "Other_Cancer": {"No": 0, "Yes": 1},
+        "Depression": {"No": 0, "Yes": 1},
+        "Arthritis": {"No": 0, "Yes": 1},
+        "Smoking_History": {"No": 0, "Yes": 1},
+        "Sex": {"Female": 0, "Male": 1},
+        "Diabetes": {
+            "No": 0,
+            "No, pre-diabetes or borderline diabetes": 1,
+            "Yes": 1,
+            "Yes, but female told only during pregnancy": 1,
+        },
+    }
 
     for columna, valor in registro.iloc[0].items():
         if columna in registro_modelo.columns:
+            if columna in mapas:
+                valor = mapas[columna].get(valor, 0)
             registro_modelo.loc[0, columna] = valor
             continue
 
