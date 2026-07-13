@@ -6,6 +6,7 @@ import streamlit as st
 MODELO_PATH = "modelo_logistic_regression.pkl"
 SCALER_PATH = "scaler.pkl"
 COLUMNAS_PATH = "columnas_modelo.pkl"
+UMBRAL_DECISION = 0.60
 
 
 @st.cache_resource
@@ -105,7 +106,6 @@ alcohol = st.sidebar.number_input("Consumo de alcohol", min_value=0.0, max_value
 fruit = st.sidebar.number_input("Consumo de frutas", min_value=0.0, max_value=120.0, value=30.0)
 vegetables = st.sidebar.number_input("Consumo de vegetales verdes", min_value=0.0, max_value=128.0, value=12.0)
 fried_potato = st.sidebar.number_input("Consumo de papa frita", min_value=0.0, max_value=128.0, value=4.0)
-umbral = st.sidebar.slider("Umbral de decisión", 0.40, 0.80, 0.60, 0.05)
 
 registro = pd.DataFrame(
     [
@@ -148,7 +148,7 @@ with col2:
         registro_modelo = preparar_registro(registro, columnas_modelo)
         registro_escalado = scaler.transform(registro_modelo)
         probabilidad = modelo.predict_proba(registro_escalado)[0, 1]
-        prediccion = int(probabilidad >= umbral)
+        prediccion = int(probabilidad >= UMBRAL_DECISION)
 
         st.metric("Probabilidad estimada", f"{probabilidad * 100:.2f}%")
 
@@ -163,8 +163,6 @@ with col2:
             st.write(
                 "El resultado es referencial y no reemplaza una consulta médica."
             )
-
-        st.write(f"Umbral utilizado: **{umbral:.2f}**")
 
 st.divider()
 st.subheader("Acerca del modelo")
